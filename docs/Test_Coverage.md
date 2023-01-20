@@ -1,12 +1,15 @@
-# WCP-precheck
-WCP-Precheck project aims to make POC's and vSphere with Tanzu installations less painful for customers and overall more successful by quickly indentifying common misconfigurations and errors that would prevent a successful installation of WCP .  The WCP-precheck team is constantly incorporating field feedback to enhance the test coverage. Please open a Gitlab Issue with a FR to add a test that is missing.
+
+tz-validate project aims to quickly indentify common misconfigurations and errors in any vSphere with Tanzu environment.  The team is constantly incorporating field feedback to enhance the test coverage. Please open a Gitlab Issue with a FR to add a test that is missing.
 
 ## Test Coverage
-  ### General
+  ### vSphere with Tanzu
   - [x] The Tag-based storage policy specified exists the vCenter.
+  - [ ] Datastores in storage-policy are accessible to all hosts in Cluster
+  - [ ] Free Space on Datastores is more than xx %.
   - [x] DNS forward and reverse resolution should work for vCenter and NSX Manager.
   - [x] Ping/curl various network end points that they are reachable (DNS, NTP, VCenter, NSX Manager, )
   - [x] Validate vSphere API is accessible and provided credentials are valid.
+  - [ ] Return versions of ESXi, vCenter, Avi Controller.
   - [x] Validate existence of vSphere cluster specified in configuration YAML is valid.
   - [x] Validate existence of VDS specified in configuration YAML is valid.
   - [x] Validate existence of Datacenter specified in configuration YAML is valid.
@@ -16,35 +19,16 @@ WCP-Precheck project aims to make POC's and vSphere with Tanzu installations les
   - [x] Validate that DRS is enabled and set to Fully Automated Mode on the specified cluster.
   - [x] Validate that a compatible NSX-T VDS exists.
   - [x] Validate that at leaset one content library is created on the vCenter.
-  - [x] NTP driff between vCenter and ESXi hosts in Cluster
-  ---
-  ### NSX based networking
-  - [x] Validate required VDS Port Groups(Management, Edge TEP, Uplink) specified in configuration YAML is valid.
-  - [x] DNS forward and reverse resolution should work for NSX Manager.
-  - [x] Validate we can communicate with NSX Manager on network and NSX Management Node and Cluster is Healthy.
-  - [x] Validate NSX-T API is accessible and provided credentials are valid.
-  - [x] Validate Health of ESXi Transport Nodes(NSX-T Agent Install and Status) in vSphere Cluster.
-  - [x] Validate Health of Edge Transport Nodes(Status) in vSphere Cluster.
-  - [ ] Ingress and Egress network is routed
-  - [ ] Heartbeat ping to the uplink IP (T0 interface) is working. 
-  - [ ] 1600 byte ping with no fragmentation between ESXi TEPs
-  - [ ] 1600 byte ping with no fragmentation between ESXi TEPs to Edge TEPs.   
-  - [x] Validate EDGE VMs are deployed as at least large.
-  - [x] NTP driff between EDGE, vCenter and ESXi
-  - [ ] Depending on NSX version, EDGE vTEP and ESX vTEP are on different VLANs
-  - [x] Validate existence of a T0 router.
-  - [ ] T0 router can access DNS and NTP
-  ---
-  ### (COMING SOON) VDS based AVI Lite config
+  - [ ] Validate Health of content library.
+  - [ ] Validate all images are valid / healthy / policy compliant in Content Library.
+  - [x] NTP drift between vCenter and ESXi hosts in Cluster.
   - [ ] AVI Controller liveness probes that check each network connectivity and the frontend VIP IP's
   - [ ] AVI Service Engine Health.
+  - [ ] AVI IPAM Address Pool exhaustion
+  - [ ] SC - Return all TKC's API-Server endpoints & Validate K8s API-Server is accessible for all.
+  - [ ] Check PODs in kube-system NS (Containers READY in PODs, STATUS, & RESTARTS)
+  - [ ] Check PODs in other system Namespaces such as CSI or AKO
+  - [ ] 
 
-  ---
-  ### VDS based HAProxy config
-  - [x] HA proxy liveness probes that check each network connectivity and the frontend VIP IP's
-  - [ ] The HA Proxy Load-Balancer IP Range and WCP Workload Network Range must not include the Gateway address for the overall Workload Network.
-  - [ ] The HA Proxy Workload IP should be in the overall Workload network, but outside of the Load-Balancer IP Range and the WCP Workload Network Range.
-  - [ ] The IP ranges for the OVA and the WCP enablement should be checked to be the same
-  - [ ] The WCP Range for Virtual Servers must be exactly the range defined by the Load-Balancer IP Range in HA Proxy.  
-  - [x] Validate successful login access to HAProxy VM's API endpoint.
+  
 

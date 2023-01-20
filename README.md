@@ -1,8 +1,13 @@
 # tanzu-validator
-WCP-Precheck project aims to make POC's and vSphere with Tanzu installations less painful for customers and overall more successful by quickly indentifying common misconfigurations and errors that would prevent a successful installation of WCP .  The pre-checks can be run by VMware Tanzu SE's or Customers to quickly validate a vSphere environment is ready for a successful vSphere with Tanzu Supervisor Cluster creation.  The project has options for testing both NSX-T based and vSphere based networking for vSphere with Tanzu and can be run as a standalone script or via Docker.
+tz-validate can be run to quickly validate a vSphere with Tanzu environment is ready and healthy. 
+
+## Use Cases 
+New deployment of a site - Validate Tanzu environment is ready to go
+After power outage or periodically to check environment readiness.
+Quickly check a site or all sites for Software versions used for ALB, VC, SC, ESXi
 
 ## Test Coverage
-For updated test coverage, see the Test_Coverage.md document in this repo.
+For updated test coverage, see the Test_Coverage.md document in the docs folder of this repo.
 
 ## 1 - Create and Populate the Parameters file used for input values 
 Download the sample parameters file from this repo or copy and paste below to a parameters file named **test_params.yaml** in the $HOME folder on the system where you will run the validation script.
@@ -26,33 +31,14 @@ VC_STORAGEPOLICIES:          # VM Storage Policies created for Tanzu
 VDS_NAME: 'vds-1'
 VDS_MGMT_PG: 'management-vm'  # Management for Supervisor Cluster and HAProxy Mgmt Interface
 VDS_PRIMARY_WKLD_PG: 'not_there'  # Combined PG for Workload Network and HAProxy VIP Network
-HAPROXY_IP: '192.168.100.163'
-HAPROXY_PORT: 5556      # HAProxy Dataplane API Mgmt Port chosen during OVA Deployment
-HAPROXY_IP_RANGE_START: '10.173.13.38' # HAProxy LB IP Range chosen during OVA Deployment
-HAPROXY_IP_RANGE_SIZE: 29
-HAPROXY_USER: 'admin'
-HAPROXY_PW: '***********'
-
-### Section for NSX-T Networking Deployments
-VDS_NAME: 'vds-1'
-VDS_MGMT_PG: 'management-vm'
-VDS_UPLINK_PG: 'ext-uplink-edge'
-VDS_EDGE_TEP_PG: 'tep-edge'
-HOST_TEP_VLAN: 102
-NSX_MGR_HOST: 'nsxmgr.tpmlab.vmware.com'   # FQDN of NSX-T Manager Appliance
-NSX_MGR_IP: '10.173.13.82'    # IP Addr of NSX-T Manager Appliance
-NSX_USER: 'admin'   # API Username for NSX-T Manager Appliance
-NSX_PASSWORD: '***********'    # API Password for NSX-T Manager Appliance
-
-### Section for WCP Supervisor Cluster Deployment
-WCP_MGMT_STARTINGIP: '192.168.100.141'  # 1st IP of 5 consecutive needed for S.C. on Mgmt net
-WCP_MGMT_MASK: '255.255.255.0'
-WCP_MGMT_GATEWAY: '192.168.100.1'
+ALB_IP: '192.168.100.163'
+ALB_USER: 'admin'
+ALB_PW: '***********'
 
 
 ``` 
 
-## 2- Run the Pre-checks
+## 2- Run the Validation
 You have two options for running the environment prechecks. Both options require you to create the **test_params.yaml** file in the $HOME directory of the linux machine where you will either run the script (locally or via Docker container). You should copy paste the sample **test_params.yaml** file from this repo into your $HOME directory as a starting point and update the values for the environment being tested.
 
 ### Option 2a(Preferred) - Run from a Docker Container on a host with Docker and access to VM Management Network

@@ -2,9 +2,9 @@
 tz-validate can be run to quickly validate a vSphere with Tanzu environment is ready and healthy. 
 
 ## Use Cases 
--New deployment of a site - Validate Tanzu environment is ready to go
--After power outage or periodically to check environment readiness.
--Quickly check a site or all sites for Software versions used for ALB, VC, SC, ESXi
+- New deployment of a site - Validate Tanzu environment is ready to go
+- After power outage or periodically to check environment readiness.
+- Quickly check a site or all sites for Software versions used for ALB, VC, SC, ESXi
 
 ## Test Coverage
 For updated test coverage, see the Test_Coverage.md document in the docs folder of this repo.

@@ -45,49 +45,44 @@ You have two options for running the environment prechecks. Both options require
 
 On any nix machine with Docker already installed.
 ```
-docker run -it --rm -v $HOME:/root -w /usr/src/app mytkrausjr/py3-wcp-precheck:v7 python wcp_tests.py -n vsphere
+docker run -it --rm -v $HOME:/root -w /usr/src/app mytkrausjr/py3-tz-validate:v7 python tz-validate.py -n vsphere
 ```
 **NOTE:** On systems with SELinux enabled you need to pass an extra mount option "z" to the end of the volume definition in docker run. Without this option you will get a permission error when you run the container.
 ```
-docker run -it --rm -v $HOME:/root:z -w /usr/src/app mytkrausjr/py3-wcp-precheck:v7 python wcp_tests.py -n vsphere
+docker run -it --rm -v $HOME:/root:z -w /usr/src/app mytkrausjr/py3-tz-validate:v7 python tz-validate.py -n vsphere
 ```
 
 ### Option 2b - Run script locally on Linux machine with access to VM Management Network
 
 On Ubuntu 18.04 with Python3 already installed.
 ```
-git clone https://gitlab.eng.vmware.com/TKGS-TSL/wcp-precheck.git              
-Cloning into 'wcp-precheck'...
-Username for 'https://gitlab.eng.vmware.com':   <VMware User ID IE njones>
-Password for 'https://kraust@gitlab.eng.vmware.com':  <VMware Password>
-cd wcp-precheck/pyvim
+git clone https://github.com/tkrausjr/tanzu-validator.git
+cd tanzu-validator/
 chmod +x ./wcp_tests.py 
-cp ./test_params.yaml ~/test_params.yaml
-vi ~/test_params.yaml    ### See Below of explanation
+cp ./test_params.yaml ~/tz-validate-params.yaml
+vi ~/tz-validate-params.yaml    ### See Below of explanation
 pip3 install pyVmomi
 pip3 install pyaml
 pip3 install requests
 pip3 install pyVim
 ```
 
-
 To run the validation script
 ``` bash
 
-❯ cd github/wcp-precheck/pyvim
-❯ ./wcp_tests.py -h                              
-usage: wcp_tests.py [-h] [--version] [-n {nsxt,vsphere}] [-v [{INFO,DEBUG}]]
+❯ ./tz-validate.py -h                              
+usage: tz-validate.py [-h] [--version] [-m {version-checks,validation}] [-v [{INFO,DEBUG}]]
 
-vcenter_checks.py validates environments for succcesful Supervisor Clusters
+tz-validate.py validates environments for healthy Supervisor Clusters
 setup in vSphere 7 with Tanzu. Uses YAML configuration files to specify
 environment information to test. Find additional information at:
-gitlab.eng.vmware.com:TKGS-TSL/wcp-precheck.git
+(https://github.com/tkrausjr/tanzu-validator.git)
 
 optional arguments:
   -h, --help            show this help message and exit
   --version             show programs version number and exit
-  -n {nsxt,vsphere}, --networking {nsxt,vsphere}
+  -m {version-checks,validation}, --mode {version-checks,validation}
                         Networking Environment(nsxt, vsphere)
   -v [{INFO,DEBUG}], --verbosity [{INFO,DEBUG}]
 
-❯ wcp_tests.py -n nsxt 
+❯  ./tz-validate.py -m validation ~/tz-validate-params.yaml

@@ -12,24 +12,18 @@ VC_CLUSTER:  'Nested-TKG-Cluster'
 VC_STORAGEPOLICIES:          # Storage Policies to use 
   - 'thin'  
   - 'thinner'      
-VC_DATASTORE: '66-datastore3'    # FUTURE - If needed 
+VC_DATASTORE: '66-datastore3'    # Validate existence of proper datastores
 
 ### Section for vSphere Networking Deployments
 VDS_NAME: 'vds-1'
 VDS_MGMT_PG: 'management-vm'
 VDS_PRIMARY_WKLD_PG: 'not_there'
 VDS_WKLD_PG: 'ext-uplink-edge'
-HAPROXY_IP: '192.168.100.163'
-HAPROXY_PORT: 5556      # HAProxy Dataplane API Mgmt Port chosen during OVA Deployment
-HAPROXY_IP_RANGE_START: '10.173.13.38' # HAProxy LB IP Range chosen during OVA Deployment
-HAPROXY_IP_RANGE_SIZE: 29
-HAPROXY_USER: 'admin'
-HAPROXY_PW: '**********'
+ALB_CTLR_IP: '192.168.100.163'
+ALB_CTLR_PORT: 5556      # AVI LB Mgmt API Port chosen during OVA Deployment
+ALB_CTLR_USER: 'admin'
+ALB_CTLR_PW: '**********'
 
-### Section for WCP Supervisor Cluster Deployment
-WCP_MGMT_STARTINGIP: '192.168.100.141'
-WCP_MGMT_MASK: '255.255.255.0'
-WCP_MGMT_GATEWAY: '192.168.100.1'
 
 
 

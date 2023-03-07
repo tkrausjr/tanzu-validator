@@ -10,7 +10,6 @@ from datetime import timedelta
 import sys
 import json
 import os
-import platform
 import yaml
 import subprocess
 import argparse
@@ -28,11 +27,12 @@ CRED = '\033[91m'
 CEND = '\033[0m'
 CGRN = '\033[92m'
 
-parser = argparse.ArgumentParser(description='vcenter_checks.py validates environments for succcesful Supervisor Clusters setup in vSphere 7 with Tanzu. Uses YAML configuration files to specify environment information to test. Find additional information at: gitlab.eng.vmware.com:TKGS-TSL/wcp-precheck.git')
+parser = argparse.ArgumentParser(description='vcenter_checks.py validates environments for succcesful Supervisor Clusters setup in vSphere 7 with Tanzu. Uses YAML configuration files to specify environment information to test.')
 parser.add_argument('--version', action='version',version='%(prog)s v0.6')
-parser.add_argument('-n','--networking',choices=['nsxt','vsphere'], help='Networking Environment(nsxt, vsphere)', default='vsphere')
+parser.add_argument('-f', '--file', required=True, action='store', help='(Required) Params YAML file')
+#parser.add_argument('-n','--networking',choices=['nsxt','vsphere'], help='Networking Environment(nsxt, vsphere)', default='vsphere')
 parser.add_argument('-v', '--verbosity', nargs="?", choices=['INFO','DEBUG'], default="INFO")
-network_type=parser.parse_args().networking
+network_type="vsphere"
 verbosity = parser.parse_args().verbosity
 
 # Setup logging parser
@@ -55,15 +55,8 @@ if verbosity == 'DEBUG':
 logger.addHandler(file_handler)
 logger.addHandler(stream_handler)
 
-currentDirectory = os.getcwd()
-host_os = platform.system()
-homedir = os.getenv('HOME')
-logger.debug("Looking in {} for test_params.yaml file".format(homedir))
-logger.debug("Host Operating System is {}.".format(host_os))
-cfg_yaml = yaml.load(open(homedir+"/test_params.yaml"), Loader=yaml.Loader)
-
-if (host_os != 'Darwin') and (host_os != 'Linux'):
-    logger.info(f"Unfortunately {host_os} is not supported")
+logger.debug("Looking in for Parameters file {}".format(parser.parse_args().file))
+cfg_yaml = yaml.load(open(parser.parse_args().file), Loader=yaml.Loader)
 
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
@@ -403,7 +396,7 @@ def main():
     objview = content.viewManager.CreateContainerView(content.rootFolder,[vim.VirtualMachine],True)
     vmList = objview.view
     objview.Destroy()
-    print("-Found a total of %s VMS on VC. " % str(len(vmList)))
+    logger.debug("--vCenter Found a total of %s VMS on VC. " % str(len(vmList)))
 
     # Check for THE DATACENTER
     logger.info("--vCenter TEST4 - Checking for the  Datacenter")
@@ -496,9 +489,10 @@ def main():
             logger.info("************ Beginning AVI Environment Testing ************")
 
             # Check for the HAProxy Management IP 
-            logger.info("--AVI TEST 1 - Checking HAProxy Health")
-            logger.info("--AVI TEST 2 - Checking reachability of HAProxy Frontend IP")
+            logger.info("--AVI TEST 1(TBD) - Checking AVI Controller Health")
+            logger.info("--AVI TEST 2(TBD) - Checking health of default SE Group SE's")
             ''' 
+            # Update or change haproxy code below to check AVI API on Controllers
             haproxy_status = check_active(cfg_yaml["HAPROXY_IP"])
 
 
@@ -528,20 +522,23 @@ def main():
     logger.info("************ Completed AVI Environment Testing ************\n")
     
     logger.info("************ Beginning K8s Environment Testing ************")
+  
     #### INSERT CODE HERE for SC Checks.
     ## Log into the Supervisor Cluster to create kubeconfig contexts
-    logger.info("--K8s TEST 1 - Creating K8s client context for kube apiserver API calls")
-
+    logger.info("--K8s TEST 1 - Logging into Supervisor Control Plane kube-api server")
     try:
-        logger.info("--K8s TEST 1 - Logging into Supervisor Control Plane kube-api server")
-        subprocess.check_call(['kubectl', 'vsphere', 'login', '--insecure-skip-tls-verify', '--server', wcp_endpoint, '-u', cfg_yaml['VC_SSO_USER']],capture_output=False) 
-        logger.info(CGRN +"---- SUCCESS - Logged into Supervisor Control Plane kube api-server" + CEND) 
-
-    except:
-        logger.error(CRED +"---- ERROR - Could not login to WCP SC Endpoint.  Is WCP Service running ? " + CEND)
+        output=subprocess.check_output(['kubectl', 'vsphere', 'login', '--insecure-skip-tls-verify', '--server', wcp_endpoint, '-u', cfg_yaml['VC_SSO_USER']]).decode("utf-8")
+        if output.startswith("Welcome"):
+            logger.info(CGRN +"---- SUCCESS - Logged into Supervisor Control Plane kube api-server" + CEND) 
+            # Create k8s client for CustomObjects
+            client2=client.CustomObjectsApi(api_client=config.new_client_from_config(context=wcp_endpoint))
+        else:
+            logger.error(CRED +"---- ERROR - Could not login to WCP SC Endpoint.  Is WCP Service running ? " + CEND)
+    except subprocess.CalledProcessError as e:
+        print(e.output)
 
     # Create k8s client for CustomObjects
-    client2=client.CustomObjectsApi(api_client=config.new_client_from_config(context=wcp_endpoint))
+    # client2=client.CustomObjectsApi(api_client=config.new_client_from_config(context=wcp_endpoint))
 
     ## Find 3 SC CP VMs and ESXi hosts they are running on.
     logger.info("--K8s TEST 2 - Verifying health of all Supervisor Control Plane VMs ")
@@ -573,7 +570,7 @@ def main():
   
         else:
             #print("-Found VM matching CAPI Machine Name in VC API. VM=%s. " % vm.summary.config.name)
-            logger.info(CGRN +"---- SUCCESS - Found running VM {} on ESX host {} that matches Supervisor Cluster CAPI Machine".format(vm.summary.config.name,vm.runtime.host.name)+ CEND) 
+            logger.info(CGRN +"---- SUCCESS - Found running VM {} on ESX {} matching CAPI Machine from a TKC".format(vm.summary.config.name,vm.runtime.host.name)+ CEND) 
 
             wkld_cluster_vms.append(vm)
 

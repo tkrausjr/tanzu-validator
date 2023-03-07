@@ -7,7 +7,7 @@ tz-validate.py can be run to quickly validate a vSphere with Tanzu environment i
 - Quickly check a site or all sites for Software versions used for ALB, VC, SC, and ESXi
 
 ## Test Coverage
-For updated test coverage, see the Test_Coverage.md [a link](https://github.com/user/repo/blob/branch/other_file.md) document in the docs folder of this repo.
+For updated test coverage, see the [Test_Coverage.md](https://github.com/tkrausjr/tanzu-validator/blob/main/docs/Test_Coverage.md) document in the docs folder of this repo.
 
 ## 1 - Create and Populate the Parameters file used for input values 
 Download the sample parameters file from this repo or copy and paste below to a parameters file on the system where you will run the validation script.

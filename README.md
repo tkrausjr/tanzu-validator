@@ -1,5 +1,5 @@
 # tanzu-validator
-tz-validate can be run to quickly validate a vSphere with Tanzu environment is ready and healthy. 
+tz-validate.py can be run to quickly validate a vSphere with Tanzu environment is ready and healthy. 
 
 ## Use Cases 
 - New deployment of a site - Validate Tanzu environment is ready to go.

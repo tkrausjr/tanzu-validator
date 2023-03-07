@@ -7,7 +7,6 @@ import ssl
 import requests
 from datetime import datetime
 from datetime import timedelta
-from requests.auth import HTTPBasicAuth 
 import sys
 import json
 import os
@@ -19,8 +18,6 @@ import pyVmomi
 from http import cookies
 from pyVmomi import vim, vmodl
 from pyVim import connect
-from pyVim.task import WaitForTask
-from pyVim.connect import Disconnect
 from pyVmomi import pbm, VmomiSupport
 import logging
 from kubernetes import client
@@ -78,7 +75,7 @@ def checkdns(hostname, ip):
         for d in cfg_yaml["DNS_SERVERS"]:
             fwd_lookup = subprocess.check_output(['dig', cfg_yaml["VC_HOST"], '+short', str(d)], universal_newlines=True).strip()
             rev_lookup = subprocess.check_output(['dig', '-x', cfg_yaml["VC_IP"], '+short', str(d)], universal_newlines=True).strip()[:-1]
-            logger.info('---- Checking DNS Server {} for A Record for {}'.format(d, hostname))
+            logger.debug('---- Checking DNS Server {} for A Record for {}'.format(d, hostname))
             logger.debug("---- Result of Forward Lookup {}".format(fwd_lookup))
             logger.debug("---- Result of Reverse Lookup {}".format(rev_lookup))
             if cfg_yaml["VC_IP"] != fwd_lookup:
@@ -172,7 +169,7 @@ def get_hosts_in_cluster(cluster):
     hosts = []
     for host in cluster.host :  # Iterate through the hosts in the cluster
         hosts.append(host)
-        logger.info ("---- Found ESX Host {} incluster {}".format( host.name,cluster.name))
+        logger.debug ("---- Found ESX Host {} in cluster {}".format( host.name,cluster.name))
         if host.overallStatus != "green":
             logger.error(CRED+"---- WARNING - ESXi Host {} overall Status is {} and not Green. Please correct any issues with this host.".format(host.name,host.overallStatus ) + CEND)
         else:
@@ -186,7 +183,7 @@ def get_host_times(esx_hosts, host_times):
         logger.debug("---- ESXi Host {} time is {}.".format(host.name,host_time)+ CEND)
         corrected_time = host_time.strftime('%H:%M:%S')
         host_times[host.name]=corrected_time
-        logger.info("---- ESXi Host {} 24hr time is {}.".format(host.name,corrected_time)+ CEND)
+        logger.debug("---- ESXi Host {} 24hr time is {}.".format(host.name,corrected_time)+ CEND)
     return host_times
 
 def detect_time_drift(host_times):
@@ -369,7 +366,16 @@ def check_wcp_cluster_status(s,vcip,cluster,session_id):
 
 #################################   MAIN   ################################
 def main():
-    logger.info("Workload Control Plane Network Type is {} \n".format(network_type))
+    logger.info("Workload Control Plane Network Type is {} ".format(network_type))
+    # Common tests to be run regardless of Networking choice
+    # Check YAML file for missing paramters 
+    logger.info("-- Checking Required YAML inputs for program: \n ")
+    for k, v in cfg_yaml.items():
+        if v == None:
+            logger.error(CRED +"ERROR - Missing required value for {}".format(k) + CEND) 
+        else:
+            logger.debug(CGRN +"SUCCESS - Found value, {} for key, {}".format(v,k)+ CEND) 
+    
     logger.info("************ Beginning vCenter Environment Testing ************")
     
     requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
@@ -378,23 +384,13 @@ def main():
     s = requests.Session()
     s.verify = False
 
-     # Common tests to be run regardless of Networking choice
-    # Check YAML file for missing paramters 
-    logger.info("--vCenter TEST 1 - Checking Required YAML inputs for program: ")
-    for k, v in cfg_yaml.items():
-        if v == None:
-            logger.error(CRED +"ERROR - Missing required value for {}".format(k) + CEND) 
-        else:
-            logger.debug(CGRN +"SUCCESS - Found value, {} for key, {}".format(v,k)+ CEND) 
-    
-    logger.info("--vCenter TEST 2 - Checking Network Communication for vCenter")
     # Check if VC is resolvable and responding
-    logger.info("--vCenter TEST 2a - Checking IP is Active for vCenter")
+    logger.info("--vCenter TEST 2 - Checking vCenter IP is Active for vCenter")
     vc_status = check_active(cfg_yaml["VC_IP"])
-    logger.info("--vCenter TEST 2b - Checking DNS Servers are reachable on network")
+    logger.info("--vCenter TEST 2 - Checking DNS Servers are reachable on network")
     for dns_svr in cfg_yaml["DNS_SERVERS"]:
         check_active(dns_svr)
-    logger.info("--vCenter TEST 2c - Checking Name Resolution for vCenter")
+    logger.info("--vCenter TEST 2 - Checking Name Resolution for vCenter FQDN {} to IP {}".format(cfg_yaml["VC_HOST"], cfg_yaml["VC_IP"] ))
     checkdns(cfg_yaml["VC_HOST"], cfg_yaml["VC_IP"] )
     
     logger.info("--vCenter TEST 3 - Checking VC is reachable via API using provided credentials")
@@ -452,24 +448,20 @@ def main():
         datacenter_id = json.loads(datacenter_object.text)["value"][0].get("datacenter")
         logger.debug("---Datacenter ID is {}".format(datacenter_id))
 
-    
-   
-
-
     # Check NTP Time settings on vCenter
     logger.info("--vCenter TEST 11 - Checking time accuracy/synchronization in environment")
 
     # Check NTP Time settings on vCenter
-    logger.info("--vCenter TEST 11 - Checking time on vCenter Appliance")
+    logger.debug("--vCenter TEST 11 - Checking time on vCenter Appliance")
     host_times = get_vc_time( vc_session, cfg_yaml['VC_HOST'])
 
     # Check Time settings on ESXi hosts
-    logger.info("--vCenter TEST 11 - Checking time on ESXi hosts")
+    logger.debug("--vCenter TEST 11 - Checking time on ESXi hosts")
     # First return all the ESXi hosts in the cluster
     host_times = get_host_times(esx_hosts,host_times)
 
     # Detect variances in the times among all the objects ESXi and vCenter
-    logger.info("--vCenter TEST 11 - Checking max time deltas on ESXi and vCenter hosts is less than 30")
+    logger.info("----------------------- Checking max time deltas on ESXi and vCenter hosts is less than 30")
     detect_time_drift(host_times)
    
     # Check existent of a Content Library
@@ -504,19 +496,19 @@ def main():
             logger.info("************ Beginning AVI Environment Testing ************")
 
             # Check for the HAProxy Management IP 
-            logger.info("--AVI TEST 19 - Checking HAProxy Health")
-            logger.info("--AVI TEST 19 - Checking reachability of HAProxy Frontend IP")
+            logger.info("--AVI TEST 1 - Checking HAProxy Health")
+            logger.info("--AVI TEST 2 - Checking reachability of HAProxy Frontend IP")
             ''' 
             haproxy_status = check_active(cfg_yaml["HAPROXY_IP"])
 
 
             if haproxy_status != 1:
                 # Check for the HAProxy Health
-                logger.info("--AVI TEST 19 - Checking login to HAPROXY DataPlane API")
+                logger.info("-- Checking login to HAPROXY DataPlane API")
                 check_health_with_auth("get",cfg_yaml["HAPROXY_IP"], str(cfg_yaml["HAPROXY_PORT"]), '/v2/services/haproxy/configuration/backends', 
                 cfg_yaml["HAPROXY_USER"], cfg_yaml["HAPROXY_PW"])
             else:
-                logger.info("--AVI TEST 19 - Skipping HAPROXY DataPlane API Login until IP is Active")
+                logger.info("-- Skipping HAPROXY DataPlane API Login until IP is Active")
              '''
                    
         except vmodl.MethodFault as e:
@@ -538,52 +530,57 @@ def main():
     logger.info("************ Beginning K8s Environment Testing ************")
     #### INSERT CODE HERE for SC Checks.
     ## Log into the Supervisor Cluster to create kubeconfig contexts
-    logger.info("--K8s TEST 18 - Creating K8s client context for kube apiserver API calls")
+    logger.info("--K8s TEST 1 - Creating K8s client context for kube apiserver API calls")
 
     try:
-        logger.info("--K8s TEST 18 - Logging into Supervisor Control Plane kube-api server")
-        subprocess.check_call(['kubectl', 'vsphere', 'login', '--insecure-skip-tls-verify', '--server', wcp_endpoint, '-u', cfg_yaml['VC_SSO_USER']]) 
+        logger.info("--K8s TEST 1 - Logging into Supervisor Control Plane kube-api server")
+        subprocess.check_call(['kubectl', 'vsphere', 'login', '--insecure-skip-tls-verify', '--server', wcp_endpoint, '-u', cfg_yaml['VC_SSO_USER']],capture_output=False) 
+        logger.info(CGRN +"---- SUCCESS - Logged into Supervisor Control Plane kube api-server" + CEND) 
+
     except:
-        logger.error(CRED +"-Could not login to WCP SC Endpoint.  Is WCP Service running ? " + CEND)
+        logger.error(CRED +"---- ERROR - Could not login to WCP SC Endpoint.  Is WCP Service running ? " + CEND)
 
     # Create k8s client for CustomObjects
     client2=client.CustomObjectsApi(api_client=config.new_client_from_config(context=wcp_endpoint))
+
+    ## Find 3 SC CP VMs and ESXi hosts they are running on.
+    logger.info("--K8s TEST 2 - Verifying health of all Supervisor Control Plane VMs ")
+    for vmobject in vmList:
+        if "SupervisorControlPlaneVM" in vmobject.summary.config.name:
+            logger.debug("-Found Supervisor Control Plane VM %s. " % vmobject.summary.config.name)
+            logger.info(CGRN +"---- SUCCESS - Found SC VM {} running on ESX host {}".format(vmobject.summary.config.name,vmobject.runtime.host.name)+ CEND) 
+
+    logger.info("--K8s TEST 3 - Verifying health of VM's matching CAPI Virtual Machines on Supervisor Cluster. ")
+    wkld_cluster_vms = []
 
     # Return Cluster API "Machine" objects
     # This builds a list of every Guest Cluster VM (Not including SC VMs)
     try:
         machine_list_dict=client2.list_namespaced_custom_object("cluster.x-k8s.io","v1alpha3","","machines",pretty="True")
-        print("\n-Found", str(len(machine_list_dict)), 'kubernetes Workload Cluster VMs')
+        logger.info("---- Found {} kubernetes Workload Cluster VMs".format(str(len(machine_list_dict)-1)))
     except Exception as e:
         print("Exception when calling CustomObjectsApi->list_namespaced_custom_object: %s\n" % e)
-    
-    wkld_cluster_vms = []
+
     for machine in machine_list_dict["items"]:
-        print('-Found CAPI Machine Object in SC. VM Name = {0}'.format(machine['metadata']['name']))
+        logger.debug('-Found CAPI Machine Object in Supervisor Cluster . VM Name = {0}'.format(machine['metadata']['name']))
         #print(' -Machine Namespace - {0}'.format(machine['metadata']['namespace']))
         #print(' -Machine Cluster - {0}'.format(machine['metadata']['labels']['cluster.x-k8s.io/cluster-name']))
         # Search pyVmomi all VMs by DNSName
         vm=search_index.FindByDnsName(None, machine['metadata']['name'],True)
         
         if vm is None:
-            print("-Could not find a matching VM with VC API ")
+            logger.debug("-Could not find a matching VM with VC API ")
   
         else:
-            print("-Found VM matching CAPI Machine Name in VC API. VM=%s. " % vm.summary.config.name)
-            wkld_cluster_vms.append(vm)
+            #print("-Found VM matching CAPI Machine Name in VC API. VM=%s. " % vm.summary.config.name)
+            logger.info(CGRN +"---- SUCCESS - Found running VM {} on ESX host {} that matches Supervisor Cluster CAPI Machine".format(vm.summary.config.name,vm.runtime.host.name)+ CEND) 
 
-     ## Find 3 SC CP VMs and shutdown from the ESXi hosts they are running on.
-    print("\n- Verifying health of all Supervisor Control Plane VMs ")
-    for vmobject in vmList:
-        if "SupervisorControlPlaneVM" in vmobject.summary.config.name:
-            print("-Found Supervisor Control Plane VM %s. " % vmobject.summary.config.name)
-            print("-VM",vmobject.summary.config.name, " is running on ESX host", vmobject.runtime.host.name)
-        
+            wkld_cluster_vms.append(vm)
 
     logger.info("************ Completed K8s Environment Testing ************")
     # Clean up and exit...
     session_delete = s.delete('https://' + cfg_yaml['VC_HOST'] + '/rest/com/vmware/cis/session', auth=(cfg_yaml['VC_SSO_USER'], cfg_yaml['VC_SSO_PWD'] ))
-    print("\nPOST - Successfully Completed Script - Cleaning up REST Session to VC.")
+    print("\n - Successfully Completed Script - Cleaning up REST Session to VC.")
 
 ''' 
 logger.info("************************************************")

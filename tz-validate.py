@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 
-# Borrowed NSX-T Rest Functions with permission from nsx-autoconfig Github project https://github.com/papivot/nsx-autoconfig 
-#
-
 import ssl
 import requests
 from datetime import datetime

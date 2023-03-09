@@ -44,7 +44,7 @@ You have two options for running the environment prechecks. Both options require
 
 ### Option 2a - Run script locally on Linux machine with access to VM Management Network
 
-On Ubuntu 18.04 with Python3 already installed.
+On Ubuntu 20.04 with Python3 already installed.
 ``` bash
 git clone https://github.com/tkrausjr/tanzu-validator.git
 cd tanzu-validator/

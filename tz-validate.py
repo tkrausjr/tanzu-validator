@@ -357,7 +357,6 @@ def check_wcp_cluster_status(s,vcip,cluster,session_id):
 #################################   MAIN   ################################
 def main():
     logger.info("Workload Control Plane Network Type is {} ".format(network_type))
-    # Common tests to be run regardless of Networking choice
     # Check YAML file for missing paramters 
     logger.info("-- Checking Required YAML inputs for program: \n ")
     for k, v in cfg_yaml.items():

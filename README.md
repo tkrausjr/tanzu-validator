@@ -13,12 +13,12 @@ For updated test coverage, see the [Test_Coverage.md](https://github.com/tkrausj
 Download the sample parameters file from this repo or copy and paste below to a parameters file on the system where you will run the validation script.
 ``` yaml
 ### COMMON SETTINGS
-DOMAIN: 'tpmlab.vmware.com'
-NTP_SERVER: 'time.vmware.com'
+DOMAIN: 'tpmlab.domain.com'
+NTP_SERVER: 'time.domain.com'
 DNS_SERVERS:
-  - '10.173.13.90'
-VC_HOST: 'vcsa.tpmlab.vmware.com'    # VCSA FQDN or IP MUST ADD A Rec to DNS
-VC_IP: '10.173.13.81'                      # VCSA IP
+  - '10.19.22.90'
+VC_HOST: 'vcsa.tpmlab.domain.com'    # VCSA FQDN or IP MUST ADD A Rec to DNS
+VC_IP: '10.19.22.81'                      # VCSA IP
 VC_SSO_USER: 'administrator@vsphere.local'
 VC_SSO_PWD: '**********'
 VC_DATACENTER: 'Datacenter'
@@ -81,13 +81,13 @@ INFO: 2023-03-07 18:19:22: __main__: 372: ************ Beginning vCenter Environ
 INFO: 2023-03-07 18:19:22: __main__: 381: --vCenter TEST 2 - Checking vCenter IP is Active for vCenter
 INFO: 2023-03-07 18:19:24: __main__: 90: ---- SUCCESS - Can ping 192.168.100.15. 
 INFO: 2023-03-07 18:19:24: __main__: 383: --vCenter TEST 2 - Checking DNS Servers are reachable on network
-INFO: 2023-03-07 18:19:26: __main__: 90: ---- SUCCESS - Can ping 10.173.13.90. 
-INFO: 2023-03-07 18:19:26: __main__: 386: --vCenter TEST 2 - Checking Name Resolution for vCenter FQDN python-vcsa.tpmlab.vmware.com to IP 192.168.100.15
-INFO: 2023-03-07 18:19:26: __main__: 77: ---- SUCCESS-The Hostname, python-vcsa.tpmlab.vmware.com resolves to the IP 192.168.100.15
-ERROR: 2023-03-07 18:19:26: __main__: 80: ---- ERROR - Missing PTR Record. The IP, 192.168.100.15 does not resolve to the Hostname python-vcsa.tpmlab.vmware.com
+INFO: 2023-03-07 18:19:26: __main__: 90: ---- SUCCESS - Can ping 10.19.22.90. 
+INFO: 2023-03-07 18:19:26: __main__: 386: --vCenter TEST 2 - Checking Name Resolution for vCenter FQDN python-vcsa.tpmlab.domain.com to IP 192.168.100.15
+INFO: 2023-03-07 18:19:26: __main__: 77: ---- SUCCESS-The Hostname, python-vcsa.tpmlab.domain.com resolves to the IP 192.168.100.15
+ERROR: 2023-03-07 18:19:26: __main__: 80: ---- ERROR - Missing PTR Record. The IP, 192.168.100.15 does not resolve to the Hostname python-vcsa.tpmlab.domain.com
 INFO: 2023-03-07 18:19:26: __main__: 389: --vCenter TEST 3 - Checking VC is reachable via API using provided credentials
 INFO: 2023-03-07 18:19:26: __main__: 100: ---- Trying to connect to VCENTER SERVER . . .
-INFO: 2023-03-07 18:19:26: __main__: 102: ---- SUCCESS-Connected to vCenter VMware vCenter Server
+INFO: 2023-03-07 18:19:26: __main__: 102: ---- SUCCESS-Connected to vCenter domain vCenter Server
 INFO: 2023-03-07 18:19:27: __main__: 402: --vCenter TEST4 - Checking for the  Datacenter
 INFO: 2023-03-07 18:19:27: __main__: 142: ---- SUCCESS - Managed Object Datacenter found.
 INFO: 2023-03-07 18:19:27: __main__: 406: --vCenter TEST 5 - Checking for the Cluster

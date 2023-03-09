@@ -1,10 +1,10 @@
 ### COMMON SETTINGS
-DOMAIN: 'tpmlab.vmware.com'
-NTP_SERVER: 'time.vmware.com'
+DOMAIN: 'tpmlab.domain.com'
+NTP_SERVER: 'time.domain.com'
 DNS_SERVERS:
-  - '10.173.13.90'
-VC_HOST: 'vcsa.tpmlab.vmware.com'    # VCSA FQDN or IP MUST ADD A Rec to DNS
-VC_IP: '10.173.13.81'                      # VCSA IP
+  - '10.19.22.90'
+VC_HOST: 'vcsa.tpmlab.domain.com'    # VCSA FQDN or IP MUST ADD A Rec to DNS
+VC_IP: '10.19.22.81'                      # VCSA IP
 VC_SSO_USER: 'administrator@vsphere.local'
 VC_SSO_PWD: '**********'
 VC_DATACENTER: 'Datacenter'

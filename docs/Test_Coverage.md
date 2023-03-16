@@ -19,9 +19,10 @@ tz-validate project aims to quickly indentify common misconfigurations and error
   - [ ] Validate Health of content library.
   - [ ] Validate all images are valid / healthy / policy compliant in Content Library.
   - [x] NTP drift between vCenter and ESXi hosts in Cluster is less than specified max(30 seconds).
-  - [ ] AVI Controller liveness probes that check each network connectivity and the frontend VIP IP's
-  - [ ] AVI Service Engine Health.
-  - [ ] AVI IPAM Address Pool exhaustion
+  - [x] AVI Controller Login and SW Version
+  - [x] AVI Service Engine Health Score above 75 for all Service Engines.
+  - [x] AVI Virtual Service Health Score above 75 for all Virtual Services.
+  - [x] AVI Load Balancer Pool Health Score above 75 for all Pools 
   - [x] K8s - Validate health of Virtual Machines in Supervisor Cluster.
   - [x] K8s - Validate successful Login to Supervisor Cluster K8s API.
   - [x] K8s - Return a list of the CAPI Machine objects tracked by the Supervisor Cluster.

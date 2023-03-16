@@ -51,11 +51,19 @@ cd tanzu-validator/
 chmod +x ./tz-validate.py 
 cp ./test_params.yaml ~/tz-validate-params.yaml
 vi ~/tz-validate-params.yaml    ### See Above for explanation of values
+```
+
+Install python dependencies individually
+``` bash
 python3 -m pip install requests
 python3 -m pip install PyYAML
 python3 -m pip install kubernetes
 python3 -m pip install 'pyvmomi==7.0.3'
-
+```
+OR
+Install python dependencies via requirements file
+``` bash
+python3 -m pip install -r requirements.txt
 
 ```
 To get help with validation script

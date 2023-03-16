@@ -74,79 +74,100 @@ To run the validation script
 ``` bash
 python3 tz-validate.py -f /home/tkrausjr/test_params.yaml
 
-INFO: 2023-03-07 18:19:22: __main__: 362: Workload Control Plane Network Type is vsphere 
-INFO: 2023-03-07 18:19:22: __main__: 365: -- Checking Required YAML inputs for program: 
+python3 tz-validate.py -f /home/tkrausjr/test_params.yaml
+INFO: 2023-03-15 23:22:06: __main__: 390: Workload Control Plane Network Type is vsphere 
+INFO: 2023-03-15 23:22:06: __main__: 392: -- Checking Required YAML inputs for program: 
  
-INFO: 2023-03-07 18:19:22: __main__: 372: ************ Beginning vCenter Environment Testing ************
-INFO: 2023-03-07 18:19:22: __main__: 381: --vCenter TEST 2 - Checking vCenter IP is Active for vCenter
-INFO: 2023-03-07 18:19:24: __main__: 90: ---- SUCCESS - Can ping 192.168.100.15. 
-INFO: 2023-03-07 18:19:24: __main__: 383: --vCenter TEST 2 - Checking DNS Servers are reachable on network
-INFO: 2023-03-07 18:19:26: __main__: 90: ---- SUCCESS - Can ping 10.19.22.90. 
-INFO: 2023-03-07 18:19:26: __main__: 386: --vCenter TEST 2 - Checking Name Resolution for vCenter FQDN python-vcsa.tpmlab.domain.com to IP 192.168.100.15
-INFO: 2023-03-07 18:19:26: __main__: 77: ---- SUCCESS-The Hostname, python-vcsa.tpmlab.domain.com resolves to the IP 192.168.100.15
-ERROR: 2023-03-07 18:19:26: __main__: 80: ---- ERROR - Missing PTR Record. The IP, 192.168.100.15 does not resolve to the Hostname python-vcsa.tpmlab.domain.com
-INFO: 2023-03-07 18:19:26: __main__: 389: --vCenter TEST 3 - Checking VC is reachable via API using provided credentials
-INFO: 2023-03-07 18:19:26: __main__: 100: ---- Trying to connect to VCENTER SERVER . . .
-INFO: 2023-03-07 18:19:26: __main__: 102: ---- SUCCESS-Connected to vCenter domain vCenter Server
-INFO: 2023-03-07 18:19:27: __main__: 402: --vCenter TEST4 - Checking for the  Datacenter
-INFO: 2023-03-07 18:19:27: __main__: 142: ---- SUCCESS - Managed Object Datacenter found.
-INFO: 2023-03-07 18:19:27: __main__: 406: --vCenter TEST 5 - Checking for the Cluster
-INFO: 2023-03-07 18:19:27: __main__: 154: ---- SUCCESS - Cluster Object pghv.ground.fedex.com found.
-INFO: 2023-03-07 18:19:27: __main__: 412: --vCenter TEST 5a - Checking Hosts in the Cluster
-ERROR: 2023-03-07 18:19:27: __main__: 167: ---- WARNING - ESXi Host 192.168.100.26 overall Status is yellow and not Green. Please correct any issues with this host.
-ERROR: 2023-03-07 18:19:27: __main__: 167: ---- WARNING - ESXi Host 192.168.100.23 overall Status is yellow and not Green. Please correct any issues with this host.
-ERROR: 2023-03-07 18:19:27: __main__: 167: ---- WARNING - ESXi Host 192.168.100.22 overall Status is yellow and not Green. Please correct any issues with this host.
-ERROR: 2023-03-07 18:19:27: __main__: 167: ---- WARNING - ESXi Host 192.168.100.24 overall Status is yellow and not Green. Please correct any issues with this host.
-ERROR: 2023-03-07 18:19:27: __main__: 167: ---- WARNING - ESXi Host 192.168.100.25 overall Status is yellow and not Green. Please correct any issues with this host.
-INFO: 2023-03-07 18:19:27: __main__: 419: --vCenter TEST 6 - Getting Storage Policies from SPBM
-INFO: 2023-03-07 18:19:27: __main__: 238: ---- SUCCESS - Found Storage Policy nfs-policy.
-INFO: 2023-03-07 18:19:27: __main__: 238: ---- SUCCESS - Found Storage Policy vsan-policy.
-INFO: 2023-03-07 18:19:27: __main__: 425: --vCenter TEST 7 - Checking Existence of the Datastores
-INFO: 2023-03-07 18:19:27: __main__: 142: ---- SUCCESS - Managed Object vsanDatastore found.
-INFO: 2023-03-07 18:19:27: __main__: 429: --vCenter TEST 8 - Checking for the vds
-INFO: 2023-03-07 18:19:27: __main__: 142: ---- SUCCESS - Managed Object Dvswitch-01 found.
-INFO: 2023-03-07 18:19:27: __main__: 433: --vCenter TEST 9 - Establishing REST session to VC API
-INFO: 2023-03-07 18:19:27: __main__: 272: ---- SUCCESS - Successfully established session to VC 
-INFO: 2023-03-07 18:19:27: __main__: 445: --vCenter TEST 11 - Checking time accuracy/synchronization in environment
-INFO: 2023-03-07 18:19:27: __main__: 312: ---- vCenter 24hr time is 23:19:27
-INFO: 2023-03-07 18:19:28: __main__: 457: ----------------------- Checking max time deltas on ESXi and vCenter hosts is less than 30
-INFO: 2023-03-07 18:19:28: __main__: 185: ---- Lowest Time of all the Nodes is 1900-01-01 23:16:05.
-INFO: 2023-03-07 18:19:28: __main__: 187: ---- Highest Time of all the Nodes is 1900-01-01 23:19:28.
-INFO: 2023-03-07 18:19:28: __main__: 191: ---- Maximum allowable time drift is 0:00:30 seconds.
-INFO: 2023-03-07 18:19:28: __main__: 192: ---- Largest Time delta between all nodes is 0:03:23 seconds.
-ERROR: 2023-03-07 18:19:28: __main__: 198: ---- ERROR - Max Time Drift between all nodes is 0:03:23 which is higher than configured Max.
-INFO: 2023-03-07 18:19:28: __main__: 461: --vCenter TEST 12 - Checking for existence and configuration of Content Library
-INFO: 2023-03-07 18:19:28: __main__: 330: ---- SUCCESS - Found Content Library named local
-INFO: 2023-03-07 18:19:28: __main__: 466: --vCenter TEST 13 - Checking Status of WCP Service on vCenter
-INFO: 2023-03-07 18:19:28: __main__: 125: ---- SUCCESS-WCP Service Status STARTED
-INFO: 2023-03-07 18:19:28: __main__: 126: ---- SUCCESS-WCP Service Health HEALTHY
-INFO: 2023-03-07 18:19:28: __main__: 470: --vCenter TEST 16 - Checking for the Primary Workload Network PortGroup
-INFO: 2023-03-07 18:19:28: __main__: 142: ---- SUCCESS - Managed Object Workload-Edge-VTEP-102 found.
-INFO: 2023-03-07 18:19:28: __main__: 474: --vCenter TEST 17 - Checking for the Workload Network PortGroup
-INFO: 2023-03-07 18:19:28: __main__: 142: ---- SUCCESS - Managed Object Workload-Edge-VTEP-102 found.
-INFO: 2023-03-07 18:19:28: __main__: 478: --vCenter TEST 18 - Checking on cluster pghv.ground.fedex.com WCP Health
-INFO: 2023-03-07 18:19:28: __main__: 346: ---- SUCCESS - vSphere w/ Tanzu status is RUNNING
-INFO: 2023-03-07 18:19:28: __main__: 347: ---- SUCCESS - vSphere w/ Tanzu Supervisor Control Plane K8s API is RUNNING
-INFO: 2023-03-07 18:19:28: __main__: 483: ************ Completed vCenter Environment Testing ************
+INFO: 2023-03-15 23:22:06: __main__: 399: ************ Beginning vCenter Environment Testing ************
+INFO: 2023-03-15 23:22:06: __main__: 408: --vCenter TEST 2 - Checking vCenter IP is Active for vCenter
+INFO: 2023-03-15 23:22:08: __main__: 87: ---- SUCCESS - Can ping 192.168.100.15. 
+INFO: 2023-03-15 23:22:08: __main__: 410: --vCenter TEST 2 - Checking DNS Servers are reachable on network
+INFO: 2023-03-15 23:22:10: __main__: 87: ---- SUCCESS - Can ping 10.173.13.90. 
+INFO: 2023-03-15 23:22:10: __main__: 413: --vCenter TEST 2 - Checking Name Resolution for vCenter FQDN python-vcsa.tpmlab.vmware.com to IP 192.168.100.15
+INFO: 2023-03-15 23:22:10: __main__: 74: ---- SUCCESS-The Hostname, python-vcsa.tpmlab.vmware.com resolves to the IP 192.168.100.15
+ERROR: 2023-03-15 23:22:10: __main__: 77: ---- ERROR - Missing PTR Record. The IP, 192.168.100.15 does not resolve to the Hostname python-vcsa.tpmlab.vmware.com
+INFO: 2023-03-15 23:22:10: __main__: 416: --vCenter TEST 3 - Checking VC is reachable via API using provided credentials
+INFO: 2023-03-15 23:22:10: __main__: 97: ---- Trying to connect to VCENTER SERVER . . .
+INFO: 2023-03-15 23:22:10: __main__: 99: ---- SUCCESS-Connected to vCenter VMware vCenter Server
+INFO: 2023-03-15 23:22:11: __main__: 429: --vCenter TEST4 - Checking for the  Datacenter
+INFO: 2023-03-15 23:22:11: __main__: 139: ---- SUCCESS - Managed Object Datacenter found.
+INFO: 2023-03-15 23:22:11: __main__: 433: --vCenter TEST 5 - Checking for the Cluster
+INFO: 2023-03-15 23:22:11: __main__: 151: ---- SUCCESS - Cluster Object pghv.ground.fedex.com found.
+INFO: 2023-03-15 23:22:11: __main__: 439: --vCenter TEST 5a - Checking Hosts in the Cluster
+ERROR: 2023-03-15 23:22:11: __main__: 164: ---- WARNING - ESXi Host 192.168.100.26 overall Status is yellow and not Green. Please correct any issues with this host.
+ERROR: 2023-03-15 23:22:11: __main__: 164: ---- WARNING - ESXi Host 192.168.100.23 overall Status is yellow and not Green. Please correct any issues with this host.
+ERROR: 2023-03-15 23:22:11: __main__: 164: ---- WARNING - ESXi Host 192.168.100.22 overall Status is yellow and not Green. Please correct any issues with this host.
+ERROR: 2023-03-15 23:22:11: __main__: 164: ---- WARNING - ESXi Host 192.168.100.24 overall Status is yellow and not Green. Please correct any issues with this host.
+ERROR: 2023-03-15 23:22:11: __main__: 164: ---- WARNING - ESXi Host 192.168.100.25 overall Status is yellow and not Green. Please correct any issues with this host.
+INFO: 2023-03-15 23:22:11: __main__: 446: --vCenter TEST 6 - Getting Storage Policies from SPBM
+INFO: 2023-03-15 23:22:11: __main__: 235: ---- SUCCESS - Found Storage Policy nfs-policy.
+INFO: 2023-03-15 23:22:11: __main__: 235: ---- SUCCESS - Found Storage Policy vsan-policy.
+INFO: 2023-03-15 23:22:11: __main__: 452: --vCenter TEST 7 - Checking Existence of the Datastores
+INFO: 2023-03-15 23:22:11: __main__: 139: ---- SUCCESS - Managed Object vsanDatastore found.
+INFO: 2023-03-15 23:22:11: __main__: 456: --vCenter TEST 8 - Checking for the vds
+INFO: 2023-03-15 23:22:11: __main__: 139: ---- SUCCESS - Managed Object Dvswitch-01 found.
+INFO: 2023-03-15 23:22:11: __main__: 460: --vCenter TEST 9 - Establishing REST session to VC API
+INFO: 2023-03-15 23:22:11: __main__: 269: ---- SUCCESS - Successfully established session to VC 
+INFO: 2023-03-15 23:22:11: __main__: 472: --vCenter TEST 11 - Checking time accuracy/synchronization in environment
+INFO: 2023-03-15 23:22:11: __main__: 309: ---- vCenter 24hr time is 03:22:11
+INFO: 2023-03-15 23:22:12: __main__: 484: ----------------------- Checking max time deltas on ESXi and vCenter hosts is less than 30
+INFO: 2023-03-15 23:22:12: __main__: 182: ---- Lowest Time of all the Nodes is 1900-01-01 03:18:45.
+INFO: 2023-03-15 23:22:12: __main__: 184: ---- Highest Time of all the Nodes is 1900-01-01 03:22:12.
+INFO: 2023-03-15 23:22:12: __main__: 188: ---- Maximum allowable time drift is 0:00:30 seconds.
+INFO: 2023-03-15 23:22:12: __main__: 189: ---- Largest Time delta between all nodes is 0:03:27 seconds.
+ERROR: 2023-03-15 23:22:12: __main__: 195: ---- ERROR - Max Time Drift between all nodes is 0:03:27 which is higher than configured Max.
+INFO: 2023-03-15 23:22:12: __main__: 488: --vCenter TEST 12 - Checking for existence and configuration of Content Library
+INFO: 2023-03-15 23:22:12: __main__: 327: ---- SUCCESS - Found Content Library named local
+INFO: 2023-03-15 23:22:12: __main__: 493: --vCenter TEST 13 - Checking Status of WCP Service on vCenter
+INFO: 2023-03-15 23:22:12: __main__: 122: ---- SUCCESS-WCP Service Status STARTED
+INFO: 2023-03-15 23:22:12: __main__: 123: ---- SUCCESS-WCP Service Health HEALTHY
+INFO: 2023-03-15 23:22:12: __main__: 497: --vCenter TEST 16 - Checking for the Primary Workload Network PortGroup
+INFO: 2023-03-15 23:22:12: __main__: 139: ---- SUCCESS - Managed Object Workload-Edge-VTEP-102 found.
+INFO: 2023-03-15 23:22:12: __main__: 501: --vCenter TEST 17 - Checking for the Workload Network PortGroup
+INFO: 2023-03-15 23:22:12: __main__: 139: ---- SUCCESS - Managed Object Workload-Edge-VTEP-102 found.
+INFO: 2023-03-15 23:22:12: __main__: 505: --vCenter TEST 18 - Checking on cluster pghv.ground.fedex.com WCP Health
+INFO: 2023-03-15 23:22:13: __main__: 343: ---- SUCCESS - vSphere w/ Tanzu status is RUNNING
+INFO: 2023-03-15 23:22:13: __main__: 344: ---- SUCCESS - vSphere w/ Tanzu Supervisor Control Plane K8s API is RUNNING
+INFO: 2023-03-15 23:22:13: __main__: 509: ************ Completed vCenter Environment Testing ************
 
-INFO: 2023-03-07 18:19:28: __main__: 489: ************ Beginning AVI Environment Testing ************
-INFO: 2023-03-07 18:19:28: __main__: 492: --AVI TEST 1(TBD) - Checking AVI Controller Health
-INFO: 2023-03-07 18:19:28: __main__: 493: --AVI TEST 2(TBD) - Checking health of default SE Group SE's
-INFO: 2023-03-07 18:19:28: __main__: 522: ************ Completed AVI Environment Testing ************
+INFO: 2023-03-15 23:22:13: __main__: 514: ************ Beginning AVI Environment Testing ************
+INFO: 2023-03-15 23:22:13: __main__: 516: --AVI TEST 1 - Checking AVI Controller Health
+INFO: 2023-03-15 23:22:13: __main__: 518: Avi controller 192.168.103.21 running version 20.1.7 has sessionid pj8hqreamigll3gq4pm3900xf769amlu
+INFO: 2023-03-15 23:22:13: __main__: 520: Full AVI Version = 20.1.7-9154-20210916.210140 
+INFO: 2023-03-15 23:22:13: __main__: 523: --AVI TEST 2 - Checking health of all Service Engines
+INFO: 2023-03-15 23:22:13: __main__: 526: ---- Found 1 Service Engines
+INFO: 2023-03-15 23:22:13: __main__: 534: SUCCESS - High Health score of 100.0 for SE, Avi-se-gyhxu
+INFO: 2023-03-15 23:22:13: __main__: 537: --AVI TEST 3 - Checking health of AVI Pools 
+INFO: 2023-03-15 23:22:13: __main__: 540: ---- Found 7 Avi Pools
+INFO: 2023-03-15 23:22:13: __main__: 548: SUCCESS - High Health score of 100.0 for Pool, domain-c8--vmware-system-csi-vsphere-csi-controller-vsphere-csi-controller--2112
+INFO: 2023-03-15 23:22:13: __main__: 548: SUCCESS - High Health score of 100.0 for Pool, domain-c8--vmware-system-csi-vsphere-csi-controller-vsphere-csi-controller--2113
+INFO: 2023-03-15 23:22:14: __main__: 548: SUCCESS - High Health score of 100.0 for Pool, domain-c8--kube-system-kube-apiserver-lb-svc-kube-apiserver-lb-svc--443
+INFO: 2023-03-15 23:22:14: __main__: 548: SUCCESS - High Health score of 100.0 for Pool, domain-c8--kube-system-kube-apiserver-lb-svc-kube-apiserver-lb-svc--6443
+INFO: 2023-03-15 23:22:14: __main__: 548: SUCCESS - High Health score of 100.0 for Pool, domain-c8--spvn-infrastructure-control-plane-service-infrastructure-control-plane-service--6443
+INFO: 2023-03-15 23:22:14: __main__: 548: SUCCESS - High Health score of 100.0 for Pool, domain-c8--spvn-infrastructure-d194292081d22dbbdc111-infrastructure-d194292081d22dbbdc111--80
+INFO: 2023-03-15 23:22:14: __main__: 548: SUCCESS - High Health score of 100.0 for Pool, domain-c8--spvn-infrastructure-2ac9a6d9ed1adaec729a1-infrastructure-2ac9a6d9ed1adaec729a1--3100
+INFO: 2023-03-15 23:22:14: __main__: 551: --AVI TEST 4 - Checking health of all Virtual Services 
+INFO: 2023-03-15 23:22:14: __main__: 554: ---- Found 5 Virtual Services
+INFO: 2023-03-15 23:22:14: __main__: 562: SUCCESS - High Health score of 100.0 for Virtual Service, domain-c8--vmware-system-csi-vsphere-csi-controller
+INFO: 2023-03-15 23:22:14: __main__: 562: SUCCESS - High Health score of 100.0 for Virtual Service, domain-c8--kube-system-kube-apiserver-lb-svc
+INFO: 2023-03-15 23:22:14: __main__: 562: SUCCESS - High Health score of 100.0 for Virtual Service, domain-c8--spvn-infrastructure-control-plane-service
+INFO: 2023-03-15 23:22:15: __main__: 562: SUCCESS - High Health score of 100.0 for Virtual Service, domain-c8--spvn-infrastructure-d194292081d22dbbdc111
+INFO: 2023-03-15 23:22:15: __main__: 562: SUCCESS - High Health score of 100.0 for Virtual Service, domain-c8--spvn-infrastructure-2ac9a6d9ed1adaec729a1
+INFO: 2023-03-15 23:22:15: __main__: 572: ************ Completed AVI Environment Testing ************
 
-INFO: 2023-03-07 18:19:28: __main__: 524: ************ Beginning K8s Environment Testing ************
-INFO: 2023-03-07 18:19:28: __main__: 528: --K8s TEST 1 - Logging into Supervisor Control Plane kube-api server
-INFO: 2023-03-07 18:19:29: __main__: 532: ---- SUCCESS - Logged into Supervisor Control Plane kube api-server
-INFO: 2023-03-07 18:19:29: __main__: 544: --K8s TEST 2 - Verifying health of all Supervisor Control Plane VMs 
-INFO: 2023-03-07 18:19:29: __main__: 548: ---- SUCCESS - Found SC VM SupervisorControlPlaneVM (2) running on ESX host 192.168.100.24
-INFO: 2023-03-07 18:19:29: __main__: 548: ---- SUCCESS - Found SC VM SupervisorControlPlaneVM (3) running on ESX host 192.168.100.22
-INFO: 2023-03-07 18:19:29: __main__: 548: ---- SUCCESS - Found SC VM SupervisorControlPlaneVM (1) running on ESX host 192.168.100.23
-INFO: 2023-03-07 18:19:29: __main__: 550: --K8s TEST 3 - Verifying health of VM's matching CAPI Virtual Machines on Supervisor Cluster. 
-INFO: 2023-03-07 18:19:29: __main__: 557: ---- Found 3 kubernetes Workload Cluster VMs
-INFO: 2023-03-07 18:19:29: __main__: 573: ---- SUCCESS - Found running VM infrastructure-control-plane-q7pl5 on ESX 192.168.100.26 matching CAPI Machine from a TKC
-INFO: 2023-03-07 18:19:29: __main__: 573: ---- SUCCESS - Found running VM infrastructure-np1-h5ngh-76d4bd89f8-8jbvb on ESX 192.168.100.23 matching CAPI Machine from a TKC
-INFO: 2023-03-07 18:19:30: __main__: 573: ---- SUCCESS - Found running VM infrastructure-np1-h5ngh-76d4bd89f8-lfxt5 on ESX 192.168.100.26 matching CAPI Machine from a TKC
-INFO: 2023-03-07 18:19:30: __main__: 577: ************ Completed K8s Environment Testing ************
+INFO: 2023-03-15 23:22:15: __main__: 574: ************ Beginning K8s Environment Testing ************
+INFO: 2023-03-15 23:22:15: __main__: 578: --K8s TEST 1 - Logging into Supervisor Control Plane kube-api server
+INFO: 2023-03-15 23:22:15: __main__: 582: ---- SUCCESS - Logged into Supervisor Control Plane kube api-server
+INFO: 2023-03-15 23:22:15: __main__: 594: --K8s TEST 2 - Verifying health of all Supervisor Control Plane VMs 
+INFO: 2023-03-15 23:22:15: __main__: 598: ---- SUCCESS - Found SC VM SupervisorControlPlaneVM (2) running on ESX host 192.168.100.24
+INFO: 2023-03-15 23:22:15: __main__: 598: ---- SUCCESS - Found SC VM SupervisorControlPlaneVM (3) running on ESX host 192.168.100.22
+INFO: 2023-03-15 23:22:16: __main__: 598: ---- SUCCESS - Found SC VM SupervisorControlPlaneVM (1) running on ESX host 192.168.100.23
+INFO: 2023-03-15 23:22:16: __main__: 600: --K8s TEST 3 - Verifying health of VM's matching CAPI Virtual Machines on Supervisor Cluster. 
+INFO: 2023-03-15 23:22:16: __main__: 607: ---- Found 3 kubernetes Workload Cluster VMs
+INFO: 2023-03-15 23:22:16: __main__: 623: ---- SUCCESS - Found running VM infrastructure-control-plane-q7pl5 on ESX 192.168.100.26 matching CAPI Machine from a TKC
+INFO: 2023-03-15 23:22:16: __main__: 623: ---- SUCCESS - Found running VM infrastructure-np1-h5ngh-76d4bd89f8-8jbvb on ESX 192.168.100.23 matching CAPI Machine from a TKC
+INFO: 2023-03-15 23:22:16: __main__: 623: ---- SUCCESS - Found running VM infrastructure-np1-h5ngh-76d4bd89f8-lfxt5 on ESX 192.168.100.26 matching CAPI Machine from a TKC
+INFO: 2023-03-15 23:22:16: __main__: 627: ************ Completed K8s Environment Testing ************
 
  - Successfully Completed Script - Cleaning up REST Session to VC.
 

@@ -1,5 +1,6 @@
 # tanzu-validator
-tz-validate.py can be run to quickly validate a vSphere with Tanzu environment is ready and healthy. 
+tz-validate.py can be run to quickly validate a vSphere with Tanzu 7.0 environment is ready and healthy. 
+NOTE: Will NOT work with vSphere 8.0 and TKG 2.0
 
 ## Use Cases 
 - New deployment of a site - Validate Tanzu environment is ready to go.

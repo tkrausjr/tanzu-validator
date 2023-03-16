@@ -20,7 +20,6 @@ VDS_MGMT_PG: 'management-vm'
 VDS_PRIMARY_WKLD_PG: 'not_there'
 VDS_WKLD_PG: 'ext-uplink-edge'
 ALB_CTLR_IP: '192.168.100.163'
-ALB_CTLR_PORT: 5556      # AVI LB Mgmt API Port chosen during OVA Deployment
 ALB_CTLR_USER: 'admin'
 ALB_CTLR_PW: '**********'
 

@@ -12,7 +12,7 @@ import subprocess
 import argparse
 import pyVmomi
 from http import cookies
-from pyVmomi import vim, vmodl
+from pyVmomi import vim
 from pyVim import connect
 from pyVmomi import pbm, VmomiSupport
 import logging

@@ -51,10 +51,12 @@ cd tanzu-validator/
 chmod +x ./tz-validate.py 
 cp ./test_params.yaml ~/tz-validate-params.yaml
 vi ~/tz-validate-params.yaml    ### See Above for explanation of values
-pip3 install pyVmomi
-pip3 install pyaml
-pip3 install requests
-pip3 install pyVim
+python3 -m pip install requests
+python3 -m pip install PyYAML
+python3 -m pip install kubernetes
+python3 -m pip install 'pyvmomi==7.0.3'
+
+
 ```
 To get help with validation script
 ``` bash

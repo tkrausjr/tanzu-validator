@@ -34,9 +34,9 @@ VDS_MGMT_PG: 'management-vm'
 VDS_PRIMARY_WKLD_PG: 'not_there'
 VDS_WKLD_PG: 'ext-uplink-edge'
 ALB_CTLR_IP: '192.168.100.163'
-ALB_CTLR_PORT: 5556      # AVI LB Mgmt API Port chosen during OVA Deployment
 ALB_CTLR_USER: 'admin'
 ALB_CTLR_PW: '**********'
+ALB_HEALTH_MIN: 75
 ``` 
 ## 2- Run the Validation
 You have two options for running the environment prechecks. Both options require you to create the **test_params.yaml** file in the $HOME directory of the linux machine where you will either run the script (locally or via Docker container). You should copy paste the sample **test_params.yaml** file from this repo into your $HOME directory as a starting point and update the values for the environment being tested.

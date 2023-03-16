@@ -22,6 +22,7 @@ VDS_WKLD_PG: 'ext-uplink-edge'
 ALB_CTLR_IP: '192.168.100.163'
 ALB_CTLR_USER: 'admin'
 ALB_CTLR_PW: '**********'
+ALB_HEALTH_MIN: 75
 
 
 

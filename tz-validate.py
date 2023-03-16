@@ -353,6 +353,37 @@ def check_wcp_cluster_status(s,vcip,cluster,session_id):
         logger.error(CRED +"---- ERROR - API Call Result = ".format(response) + CEND )
         return 0
 
+def avi_login(controller,username,password):
+    login = requests.post('https://'+controller+'/login', verify=False, data={'username': username, 'password': password})
+    if not login.ok:
+        print ("Unable to Login to Avi Controller :  "+login.content.decode("utf-8"))
+        return 0,0
+    else:
+        results = json.loads(login.text)
+        logger.debug("Successfully Logged in, received Status Code  =" , login.status_code)
+        return login.cookies['sessionid'],results["version"]['Version']
+
+
+def get_avi_object_health(ip, avi_sessionid,object,uuid):
+    resp = requests.get('https://'+ip+'/api/analytics/healthscore/'+object+'/'+uuid, verify=False, cookies=dict(sessionid= avi_sessionid))
+
+    if not resp.ok:
+        print ("Unable to get healthscore for pool :  "+resp.content.decode("utf-8"))
+        return 0
+    else:
+        results = json.loads(resp.text)
+        logger.debug("Successfully queried object health, received Status Code  =" , resp.status_code)
+        return results
+
+def get_avi_objects(ip, avi_sessionid,object):
+    resp = requests.get('https://'+ip+'/api/'+object+'?fields=name,uuid', verify=False, cookies=dict(sessionid= avi_sessionid))
+    if not resp.ok:
+        print ("Unable to get Avi Object :  "+resp.content.decode("utf-8"))
+        return 0
+    else:
+        logger.debug("Successfully queried Avi object received Status Code  =" , resp.status_code)
+        dict_response = json.loads(resp.text)
+        return dict_response['results']
 
 #################################   MAIN   ################################
 def main():
@@ -475,40 +506,63 @@ def main():
     wcp_endpoint = check_wcp_cluster_status(s, cfg_yaml['VC_IP'], cluster_id, session_id)
     logger.debug("--WCP Endpoint for SC is ".format(wcp_endpoint))
 
-
     logger.info("************ Completed vCenter Environment Testing ************\n")
 
     ###### If networking type is vSphere  ######
     if network_type=='vsphere':
-        try:
 
-            logger.info("************ Beginning AVI Environment Testing ************")
+        logger.info("************ Beginning AVI Environment Testing ************")
 
-            # Check for the HAProxy Management IP 
-            logger.info("--AVI TEST 1(TBD) - Checking AVI Controller Health")
-            logger.info("--AVI TEST 2(TBD) - Checking health of default SE Group SE's")
-            ''' 
-            # Update or change haproxy code below to check AVI API on Controllers
-            haproxy_status = check_active(cfg_yaml["HAPROXY_IP"])
+        logger.info("--AVI TEST 1 - Checking AVI Controller Health")
+        avi_sessionid, avi_version = avi_login(cfg_yaml['ALB_CTLR_IP'] ,cfg_yaml['ALB_CTLR_USER'] ,cfg_yaml['ALB_CTLR_PW'])
+        logger.info(CGRN +'Avi controller {} running version {} has sessionid {}'.format(cfg_yaml['ALB_CTLR_IP'],avi_version,avi_sessionid )+ CEND)
+        resp = requests.get('https://'+cfg_yaml['ALB_CTLR_IP']+'/api/cluster/version', verify=False, cookies=dict(sessionid= avi_sessionid))
+        logger.info(CGRN +'Full AVI Version = {} '.format(json.loads(resp.text)['Tag'])+ CEND)
 
-
-            if haproxy_status != 1:
-                # Check for the HAProxy Health
-                logger.info("-- Checking login to HAPROXY DataPlane API")
-                check_health_with_auth("get",cfg_yaml["HAPROXY_IP"], str(cfg_yaml["HAPROXY_PORT"]), '/v2/services/haproxy/configuration/backends', 
-                cfg_yaml["HAPROXY_USER"], cfg_yaml["HAPROXY_PW"])
+        # Get all Avi SE's
+        logger.info("--AVI TEST 2 - Checking health of all Service Engines")
+        avi_ses = get_avi_objects(cfg_yaml['ALB_CTLR_IP'], avi_sessionid,'serviceengine')
+        # Get Health Scores
+        logger.info('---- Found {} Service Engines'.format(str(len(avi_ses))))
+        for se in avi_ses:
+            se_health = get_avi_object_health(cfg_yaml['ALB_CTLR_IP'], avi_sessionid,'serviceengine',se['uuid'])
+            health_score = se_health['series'][0]['data'][0]['value']    # Type is Float 
+            logger.debug('---- Health Score for Service Engine {} is...{}'.format(se['name'],health_score))
+            if health_score <= 75:
+                logger.info(CRED +"ERROR - Low Health score of {} for SE {}".format(str(health_score),format(se['name']) + CEND))
             else:
-                logger.info("-- Skipping HAPROXY DataPlane API Login until IP is Active")
-             '''
-                   
-        except vmodl.MethodFault as e:
-            logger.error(CRED +"Caught vmodl fault: %s" % e.msg+ CEND)
-            pass
-        except Exception as e:
-            logger.error(CRED +"Caught exception: %s" % str(e)+ CEND)
-            pass
+                logger.info(CGRN +"SUCCESS - High Health score of {} for SE, {}".format(str(health_score),format(se['name']) + CEND))
+
+        # Get all Avi Pool's
+        logger.info("--AVI TEST 3 - Checking health of AVI Pools ")
+        avi_pools = get_avi_objects(cfg_yaml['ALB_CTLR_IP'], avi_sessionid,'pool')
+        # Get Health Scores for each Pool
+        logger.info('---- Found {} Avi Pools'.format(str(len(avi_pools))))
+        for pool in avi_pools:
+            pool_health = get_avi_object_health(cfg_yaml['ALB_CTLR_IP'], avi_sessionid,'pool',pool['uuid'])
+            health_score = pool_health['series'][0]['data'][0]['value']   # Type is Float 
+            logger.debug('---- Health Score for Pool {} is...{}'.format(pool['name'],health_score))
+            if health_score <= 75:
+                logger.info(CRED +"ERROR - Low Health score of {} for Pool, {}".format(str(health_score),format(pool['name']) + CEND))
+            else:
+                logger.info(CGRN +"SUCCESS - High Health score of {} for Pool, {}".format(str(health_score),format(pool['name']) + CEND))
+
+        # Get all Avi Virtual Services
+        logger.info("--AVI TEST 4 - Checking health of all Virtual Services ")
+        avi_vs = get_avi_objects(cfg_yaml['ALB_CTLR_IP'], avi_sessionid,'virtualservice')
+        # Get Health Scores for each VS
+        logger.info('---- Found {} Virtual Services'.format(str(len(avi_vs))))
+        for vs in avi_vs:
+            vs_health = get_avi_object_health(cfg_yaml['ALB_CTLR_IP'], avi_sessionid,'virtualservice',vs['uuid'])
+            health_score = vs_health['series'][0]['data'][0]['value']  # Type is Float 
+            logger.debug('---- Health Score for Virtual Service {} is...{}'.format(vs['name'],health_score))
+            if health_score <= 75:
+                logger.info(CRED +"ERROR - Low Health score of {} for Virtual Service, {}".format(str(health_score),format(vs['name']) + CEND))
+            else:
+                logger.info(CGRN +"SUCCESS - High Health score of {} for Virtual Service, {}".format(str(health_score),format(vs['name']) + CEND))
+
    
-   
+
             
     # If networking type is NSX-T
     if network_type == 'nsxt':

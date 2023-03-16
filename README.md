@@ -45,6 +45,7 @@ You have two options for running the environment prechecks. Both options require
 ### Option 2a - Run script locally on Linux machine with access to VM Management Network
 
 On Ubuntu 20.04 with Python3 already installed.
+You also need kubectl client and the vsphere kubectl plugin for tanzu.
 ``` bash
 git clone https://github.com/tkrausjr/tanzu-validator.git
 cd tanzu-validator/
@@ -81,7 +82,10 @@ optional arguments:
   -v [{INFO,DEBUG}], --verbosity [{INFO,DEBUG}]
 ```
 To run the validation script
+- Export your kubectl vsphere password for vSphere with Tanzu for the administrator@vsphere.local Account.
 ``` bash
+export KUBECTL_VSPHERE_PASSWORD=yourpassword
+
 python3 tz-validate.py -f /home/tkrausjr/test_params.yaml
 
 python3 tz-validate.py -f /home/tkrausjr/test_params.yaml

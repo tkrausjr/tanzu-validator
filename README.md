@@ -86,7 +86,11 @@ To run the validation script
 
 ``` bash
 python3 tz-validate.py -f /home/tkrausjr/test_params.yaml
+```
 
+![alt text](https://github.com/tkrausjr/tanzu-validator/blob/main/docs/tz-validate-run.png?raw=true)
+
+``` bash
 python3 tz-validate.py -f /home/tkrausjr/test_params.yaml
 INFO: 2023-03-15 23:22:06: __main__: 390: Workload Control Plane Network Type is vsphere 
 INFO: 2023-03-15 23:22:06: __main__: 392: -- Checking Required YAML inputs for program: 

@@ -1,5 +1,6 @@
 # tanzu-validator
-tz-validate.py can be run to quickly validate a vSphere with Tanzu environment is ready and healthy. 
+tz-validate.py can be run to quickly validate a vSphere with Tanzu 7.0 environment is ready and healthy. 
+NOTE: Will NOT work with vSphere 8.0 and TKG 2.0
 
 ## Use Cases 
 - New deployment of a site - Validate Tanzu environment is ready to go.
@@ -45,17 +46,26 @@ You have two options for running the environment prechecks. Both options require
 ### Option 2a - Run script locally on Linux machine with access to VM Management Network
 
 On Ubuntu 20.04 with Python3 already installed.
+You also need kubectl client and the vsphere kubectl plugin for tanzu.
 ``` bash
 git clone https://github.com/tkrausjr/tanzu-validator.git
 cd tanzu-validator/
 chmod +x ./tz-validate.py 
 cp ./test_params.yaml ~/tz-validate-params.yaml
 vi ~/tz-validate-params.yaml    ### See Above for explanation of values
+```
+
+Install python dependencies individually
+``` bash
 python3 -m pip install requests
 python3 -m pip install PyYAML
 python3 -m pip install kubernetes
 python3 -m pip install 'pyvmomi==7.0.3'
-
+```
+OR
+Install python dependencies via requirements file
+``` bash
+python3 -m pip install -r requirements.txt
 
 ```
 To get help with validation script
@@ -73,7 +83,10 @@ optional arguments:
   -v [{INFO,DEBUG}], --verbosity [{INFO,DEBUG}]
 ```
 To run the validation script
+- Export your kubectl vsphere password for vSphere with Tanzu for the administrator@vsphere.local Account.
 ``` bash
+export KUBECTL_VSPHERE_PASSWORD=yourpassword
+
 python3 tz-validate.py -f /home/tkrausjr/test_params.yaml
 
 python3 tz-validate.py -f /home/tkrausjr/test_params.yaml

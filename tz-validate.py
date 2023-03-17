@@ -576,6 +576,7 @@ def main():
     #### INSERT CODE HERE for SC Checks.
     ## Log into the Supervisor Cluster to create kubeconfig contexts
     logger.info("--K8s TEST 1 - Logging into Supervisor Control Plane kube-api server")
+    os.environ['KUBECTL_VSPHERE_PASSWORD'] = cfg_yaml['VC_SSO_PWD']
     try:
         output=subprocess.check_output(['kubectl', 'vsphere', 'login', '--insecure-skip-tls-verify', '--server', wcp_endpoint, '-u', cfg_yaml['VC_SSO_USER']]).decode("utf-8")
         if output.startswith("Welcome"):

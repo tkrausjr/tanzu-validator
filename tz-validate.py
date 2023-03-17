@@ -333,7 +333,7 @@ def get_content_library(vc_session,vc_host):
     return 0  
 
 def check_wcp_cluster_status(s,vcip,cluster,session_id):
-    response=s.get('https://' + vcip + '/api/vcenter/namespace-management/clusters/domain-c8', headers={"vmware-api-session-id": session_id} )
+    response=s.get('https://' + vcip + '/api/vcenter/namespace-management/clusters/'+cluster, headers={"vmware-api-session-id": session_id} )
     result = json.loads(response.text)
     logger.debug(CRED +"---- DEBUG - RESPONSE TEXT = {}".format(response.text) + CEND )
     if response.ok:

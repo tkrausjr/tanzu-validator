@@ -83,10 +83,8 @@ optional arguments:
   -v [{INFO,DEBUG}], --verbosity [{INFO,DEBUG}]
 ```
 To run the validation script
-- Export your kubectl vsphere password for vSphere with Tanzu for the administrator@vsphere.local Account.
-``` bash
-export KUBECTL_VSPHERE_PASSWORD=yourpassword
 
+``` bash
 python3 tz-validate.py -f /home/tkrausjr/test_params.yaml
 
 python3 tz-validate.py -f /home/tkrausjr/test_params.yaml
